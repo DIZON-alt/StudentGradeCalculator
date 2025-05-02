@@ -1,0 +1,68 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class StudentGradeCalculator {
+
+    public static double calculateAverageGrade(String filename) {
+        double total = 0;
+        int count = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.trim().split("\\s+");
+                if (parts.length != 2) continue;
+
+                String name = parts[0];
+                if (name.equalsIgnoreCase("Average")) continue;
+
+                try {
+                    double grade = Double.parseDouble(parts[1]);
+                    total += grade;
+                    count++;
+                } catch (NumberFormatException e) {
+                    // Ignore invalid number formats
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+
+        return count > 0 ? Math.round((total / count) * 100.0) / 100.0 : 0.0;
+    }
+
+    public static void printStudentGrades(String filename) {
+        System.out.println("Student Grades:");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.trim().split("\\s+");
+                if (parts.length != 2) continue;
+
+                String name = parts[0];
+                String grade = parts[1];
+
+                if (!name.equalsIgnoreCase("Average")) {
+                    System.out.println(name + ": " + grade);
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+
+        double average = calculateAverageGrade(filename);
+        System.out.println("Average Grade: " + average);
+    }
+
+    public static void main(String[] args) {
+        String fileName = "grades.txt";
+        printStudentGrades(fileName);
+    }
+} results ?
+
